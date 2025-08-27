@@ -1,0 +1,27 @@
+{
+  "name": "quick-mcp",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "quick-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ts-node src/index.ts",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shubham6822/quick-mcp.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shubham6822/quick-mcp/issues"
+  },
+  "homepage": "https://github.com/shubham6822/quick-mcp#readme",
+  "devDependencies": {
+    "typescript": "^5.9.2"
+  }
+}
