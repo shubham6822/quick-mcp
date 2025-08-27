@@ -9,7 +9,7 @@ import IDE_CONFIGS from "./ide/IDE_CONFIGS.js";
 // Show ASCII banner
 console.log(
   chalk.cyan(
-    figlet.textSync("Quick MCP", {
+    figlet.textSync("MCP Helper", {
       font: "ANSI Shadow", // Try "Slant", "Big", etc.
       horizontalLayout: "default",
       verticalLayout: "default",
