@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "bin": {
     "quick-mcp": "dist/index.js"
   },
@@ -22,6 +23,13 @@
   },
   "homepage": "https://github.com/shubham6822/quick-mcp#readme",
   "devDependencies": {
+    "@types/figlet": "^1.7.0",
+    "@types/node": "^24.3.0",
     "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "chalk": "^5.6.0",
+    "figlet": "^1.8.2",
+    "inquirer": "^12.9.4"
   }
 }
