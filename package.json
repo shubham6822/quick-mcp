@@ -1,11 +1,11 @@
 {
-  "name": "mcp-helper",
+  "name": "setup-mcp",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "type": "module",
   "bin": {
-    "mcp-helper": "dist/index.js"
+    "setup-mcp": "dist/index.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
