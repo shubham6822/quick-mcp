@@ -1,4 +1,4 @@
-# Setup MCP
+# Quick MCP Setup
 
 A CLI tool to quickly set up Model Context Protocol (MCP) servers for various IDEs with multi-select functionality.
 

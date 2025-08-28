@@ -1,80 +1,58 @@
 import type { MCPServer } from "../types/index.js";
 
 const MCP_SERVERS: Record<string, MCPServer> = {
-  filesystem: {
-    name: "Filesystem",
+  playwright: {
+    name: "Playwright Browser Automation",
     command: "npx",
-    args: [
-      "-y",
-      "@modelcontextprotocol/server-filesystem",
-      "/path/to/allowed/directory",
-    ],
+    args: ["@playwright/mcp@latest"],
+  },
+  "firecrawl-mcp": {
+    name: "Firecrawl Web Scraping",
+    command: "npx",
+    args: ["-y", "firecrawl-mcp"],
+    env: {
+      FIRECRAWL_API_KEY: "YOUR-API-KEY",
+    },
+  },
+  filesystem: {
+    name: "File System Operations",
+    command: "npx",
+    args: ["-y", "@modelcontextprotocol/server-filesystem", "CUSTOM_PATH"],
+  },
+  postgres: {
+    name: "PostgreSQL Database",
+    command: "npx",
+    args: ["-y", "@modelcontextprotocol/server-postgres"],
+    env: {
+      POSTGRES_CONNECTION_STRING:
+        "postgresql://user:password@localhost:5432/database",
+    },
+  },
+  sqlite: {
+    name: "SQLite Database",
+    command: "npx",
+    args: ["-y", "@modelcontextprotocol/server-sqlite", "CUSTOM_DB_PATH"],
+  },
+  fetch: {
+    name: "HTTP Fetch Operations",
+    command: "npx",
+    args: ["-y", "@modelcontextprotocol/server-fetch"],
   },
   github: {
-    name: "GitHub",
+    name: "GitHub Integration",
     command: "npx",
     args: ["-y", "@modelcontextprotocol/server-github"],
     env: {
-      GITHUB_PERSONAL_ACCESS_TOKEN: "your-token-here",
+      GITHUB_PERSONAL_ACCESS_TOKEN: "YOUR-GITHUB-TOKEN",
     },
   },
-  gitlab: {
-    name: "GitLab",
-    command: "npx",
-    args: ["-y", "@modelcontextprotocol/server-gitlab"],
-    env: {
-      GITLAB_PERSONAL_ACCESS_TOKEN: "your-token-here",
-      GITLAB_API_URL: "https://gitlab.com/api/v4",
-    },
-  },
-  "google-drive": {
-    name: "Google Drive",
-    command: "npx",
-    args: ["-y", "@modelcontextprotocol/server-gdrive"],
-    env: {
-      GDRIVE_SERVICE_ACCOUNT_KEY_FILE: "/path/to/service-account-key.json",
-    },
-  },
-  slack: {
-    name: "Slack",
-    command: "npx",
-    args: ["-y", "@modelcontextprotocol/server-slack"],
-    env: {
-      SLACK_BOT_TOKEN: "xoxb-your-bot-token",
-      SLACK_TEAM_ID: "your-team-id",
-    },
-  },
-  postgres: {
-    name: "PostgreSQL",
-    command: "npx",
-    args: [
-      "-y",
-      "@modelcontextprotocol/server-postgres",
-      "postgresql://localhost/mydb",
-    ],
-  },
-  sqlite: {
-    name: "SQLite",
-    command: "npx",
-    args: ["-y", "@modelcontextprotocol/server-sqlite", "/path/to/database.db"],
-  },
-  puppeteer: {
-    name: "Puppeteer (Web Scraping)",
-    command: "npx",
-    args: ["-y", "@modelcontextprotocol/server-puppeteer"],
-  },
-  "brave-search": {
+  brave: {
     name: "Brave Search",
     command: "npx",
     args: ["-y", "@modelcontextprotocol/server-brave-search"],
     env: {
-      BRAVE_API_KEY: "your-api-key-here",
+      BRAVE_API_KEY: "YOUR-BRAVE-API-KEY",
     },
-  },
-  memory: {
-    name: "Memory",
-    command: "npx",
-    args: ["-y", "@modelcontextprotocol/server-memory"],
   },
 } as const;
 

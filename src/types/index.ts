@@ -2,6 +2,7 @@ export interface IDEConfig {
   name: string;
   dirPath: string;
   filePath: string;
+  template: any;
 }
 
 export interface MCPServer {
@@ -17,10 +18,26 @@ export interface MCPEntry {
 }
 
 export type IDEKey = "claude" | "cursor" | "windsurf" | "zed" | "copilot";
+export type MCPServerKey =
+  | "playwright"
+  | "firecrawl-mcp"
+  | "filesystem"
+  | "postgres"
+  | "sqlite"
+  | "fetch"
+  | "github"
+  | "brave";
 
 export interface SetupOptions {
   selectedIDEs: IDEKey[];
-  selectedServers?: string[];
+  selectedServers: MCPServerKey[];
+  envVariables?: Record<string, Record<string, string>>;
+}
+
+export interface MCPConfiguration {
+  serverKey: MCPServerKey;
+  server: MCPServer;
+  envValues?: Record<string, string>;
 }
 
 export interface FileSystemOperations {

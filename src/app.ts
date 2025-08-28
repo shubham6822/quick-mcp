@@ -1,7 +1,7 @@
 import { PromptService } from "./services/prompt-service.js";
 import { MCPSetupService } from "./services/mcp-setup-service.js";
 import { displayBanner, logInfo, logError } from "./utils/logger.js";
-import type { IDEKey } from "./types/index.js";
+import type { IDEKey, MCPConfiguration } from "./types/index.js";
 
 export class MCPSetupApp {
   private promptService: PromptService;
@@ -16,6 +16,7 @@ export class MCPSetupApp {
     try {
       displayBanner();
 
+      // Step 1: Select IDEs
       const selectedIDEs = await this.promptService.promptForIDEs();
 
       if (selectedIDEs.length === 0) {
@@ -23,7 +24,15 @@ export class MCPSetupApp {
         return;
       }
 
-      await this.confirmAndSetup(selectedIDEs);
+      // Step 2: Select MCP servers
+      const mcpConfigurations = await this.promptService.promptForMCPServers();
+
+      if (mcpConfigurations.length === 0) {
+        logInfo("No MCP servers selected. Exiting...");
+        return;
+      }
+
+      await this.confirmAndSetup(selectedIDEs, mcpConfigurations);
     } catch (error) {
       logError(
         `Application error: ${
@@ -34,8 +43,14 @@ export class MCPSetupApp {
     }
   }
 
-  private async confirmAndSetup(selectedIDEs: IDEKey[]): Promise<void> {
-    const summary = this.setupService.getConfigurationSummary(selectedIDEs);
+  private async confirmAndSetup(
+    selectedIDEs: IDEKey[],
+    mcpConfigurations: MCPConfiguration[]
+  ): Promise<void> {
+    const summary = this.setupService.getConfigurationSummary(
+      selectedIDEs,
+      mcpConfigurations
+    );
     console.log("\n" + summary + "\n");
 
     // Confirm before proceeding
@@ -48,7 +63,7 @@ export class MCPSetupApp {
       return;
     }
 
-    this.setupService.setupMultipleIDEs(selectedIDEs);
+    this.setupService.setupMultipleIDEs(selectedIDEs, mcpConfigurations);
 
     console.log("\n🎉 Setup completed! Your IDEs are now configured for MCP.");
   }

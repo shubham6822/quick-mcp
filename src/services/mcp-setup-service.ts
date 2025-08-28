@@ -1,11 +1,10 @@
 import IDE_CONFIGS from "../config/ide-configs.js";
-import type { IDEKey, MCPEntry } from "../types/index.js";
+import type { IDEKey, MCPConfiguration } from "../types/index.js";
 import { fileSystem } from "../utils/file-system.js";
-import { createMCPEntry, normalizeJSONData } from "../utils/validators.js";
 import { logSuccess, logError, logWarning } from "../utils/logger.js";
 
 export class MCPSetupService {
-  setupIDE(ideKey: IDEKey): void {
+  setupIDE(ideKey: IDEKey, mcpConfigurations: MCPConfiguration[]): void {
     try {
       const config = IDE_CONFIGS[ideKey];
       if (!config) {
@@ -13,9 +12,11 @@ export class MCPSetupService {
       }
 
       this.ensureDirectoryExists(config.dirPath);
-      this.writeConfigurationFile(config.filePath, config.name);
+      this.writeConfigurationFile(config.filePath, config, mcpConfigurations);
 
-      logSuccess(`Configured ${config.name}`);
+      logSuccess(
+        `Configured ${config.name} with ${mcpConfigurations.length} MCP server(s)`
+      );
     } catch (error) {
       logError(
         `Failed to configure ${ideKey}: ${
@@ -26,12 +27,15 @@ export class MCPSetupService {
     }
   }
 
-  setupMultipleIDEs(ideKeys: IDEKey[]): void {
+  setupMultipleIDEs(
+    ideKeys: IDEKey[],
+    mcpConfigurations: MCPConfiguration[]
+  ): void {
     const results = { success: 0, failed: 0 };
 
     for (const ideKey of ideKeys) {
       try {
-        this.setupIDE(ideKey);
+        this.setupIDE(ideKey, mcpConfigurations);
         results.success++;
       } catch (error) {
         results.failed++;
@@ -48,20 +52,64 @@ export class MCPSetupService {
     }
   }
 
-  private writeConfigurationFile(filePath: string, ideName: string): void {
-    const newEntry = createMCPEntry(
-      `Hello from setup-mcp CLI 🎉 - ${ideName} configured`
+  private writeConfigurationFile(
+    filePath: string,
+    ideConfig: any,
+    mcpConfigurations: MCPConfiguration[]
+  ): void {
+    // Create the configuration object based on the IDE template
+    const configData = this.createConfigurationFromTemplate(
+      ideConfig,
+      mcpConfigurations
     );
 
-    // Read existing data
-    const existingData = fileSystem.readJSON<unknown>(filePath);
-    const data = normalizeJSONData(existingData);
+    // Write the configuration to file
+    fileSystem.writeJSON(filePath, configData);
+  }
 
-    // Add new entry
-    data.push(newEntry);
+  private createConfigurationFromTemplate(
+    ideConfig: any,
+    mcpConfigurations: MCPConfiguration[]
+  ): any {
+    const template = ideConfig.template;
+    const configData = JSON.parse(JSON.stringify(template)); // Deep clone
 
-    // Write back to file
-    fileSystem.writeJSON(filePath, data);
+    // Determine the key to use for servers based on IDE
+    const serversKey = this.getServersKey(template);
+
+    // Clear the template servers and add real configurations
+    configData[serversKey] = {};
+
+    for (const mcpConfig of mcpConfigurations) {
+      const serverConfig: any = {
+        command: mcpConfig.server.command,
+        args: mcpConfig.server.args,
+      };
+
+      // Add environment variables if they exist
+      if (mcpConfig.envValues && Object.keys(mcpConfig.envValues).length > 0) {
+        serverConfig.env = mcpConfig.envValues;
+      }
+
+      // Add type field for cursor
+      if (
+        template.mcpServers &&
+        template.mcpServers.name &&
+        "type" in template.mcpServers.name
+      ) {
+        serverConfig.type = "stdio";
+      }
+
+      configData[serversKey][mcpConfig.serverKey] = serverConfig;
+    }
+
+    return configData;
+  }
+
+  private getServersKey(template: any): string {
+    if (template.mcpServers) return "mcpServers";
+    if (template.servers) return "servers";
+    throw new Error("Unknown template format - no servers key found");
   }
 
   private logResults(
@@ -76,14 +124,31 @@ export class MCPSetupService {
     }
   }
 
-  getConfigurationSummary(ideKeys: IDEKey[]): string {
-    const configurations = ideKeys
+  getConfigurationSummary(
+    ideKeys: IDEKey[],
+    mcpConfigurations: MCPConfiguration[]
+  ): string {
+    const ideConfigurations = ideKeys
       .map((ideKey) => {
         const config = IDE_CONFIGS[ideKey];
         return `  • ${config?.name}: ${config?.filePath}`;
       })
       .join("\n");
 
-    return `Configuration Summary:\n${configurations}`;
+    const mcpSummary = mcpConfigurations
+      .map((mcpConfig) => {
+        const envInfo = mcpConfig.envValues
+          ? ` (with ${Object.keys(mcpConfig.envValues).length} env var(s))`
+          : "";
+        return `  • ${mcpConfig.server.name}${envInfo}`;
+      })
+      .join("\n");
+
+    return `Configuration Summary:
+IDEs to configure:
+${ideConfigurations}
+
+MCP Servers to install:
+${mcpSummary}`;
   }
 }

@@ -5,26 +5,50 @@ const IDE_CONFIGS: Record<string, IDEConfig> = {
     name: "Claude Code",
     dirPath: "",
     filePath: ".mcp.json",
+    template: {
+      mcpServers: {
+        name: {
+          command: "COMMAND",
+          args: ["ARG1", "ARG2"],
+          env: {
+            KEY: "VALUE",
+          },
+        },
+      },
+    },
   },
   cursor: {
     name: "Cursor",
     dirPath: ".cursor",
     filePath: ".cursor/mcp.json",
-  },
-  windsurf: {
-    name: "Windsurf",
-    dirPath: ".windsurf",
-    filePath: ".windsurf/settings.local.json",
-  },
-  zed: {
-    name: "Zed",
-    dirPath: ".zed",
-    filePath: ".zed/settings.local.json",
+    template: {
+      mcpServers: {
+        name: {
+          type: "string",
+          command: "COMMAND",
+          args: ["ARG1", "ARG2"],
+          env: {
+            KEY: "VALUE",
+          },
+        },
+      },
+    },
   },
   copilot: {
     name: "GitHub Copilot",
     dirPath: ".vscode",
     filePath: ".vscode/mcp.json",
+    template: {
+      servers: {
+        name: {
+          command: "COMMAND",
+          args: ["ARG1", "ARG2"],
+          env: {
+            KEY: "VALUE",
+          },
+        },
+      },
+    },
   },
 } as const;
 
