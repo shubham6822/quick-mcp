@@ -1,9 +1,10 @@
-import { resolve } from "path";
-const IDE_CONFIGS = {
-  "claude-desktop": {
-    name: "Claude Desktop",
-    dirPath: ".claude",
-    filePath: ".claude/settings.local.json",
+import type { IDEConfig } from "../types/index.js";
+
+const IDE_CONFIGS: Record<string, IDEConfig> = {
+  claude: {
+    name: "Claude Code",
+    dirPath: "",
+    filePath: ".mcp.json",
   },
   cursor: {
     name: "Cursor",
@@ -20,11 +21,11 @@ const IDE_CONFIGS = {
     dirPath: ".zed",
     filePath: ".zed/settings.local.json",
   },
-  vscode: {
-    name: "VS Code (with Continue extension)",
+  copilot: {
+    name: "GitHub Copilot",
     dirPath: ".vscode",
-    filePath: ".vscode/settings.local.json",
+    filePath: ".vscode/mcp.json",
   },
-};
+} as const;
 
 export default IDE_CONFIGS;
