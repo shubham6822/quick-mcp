@@ -7,16 +7,19 @@ import {
 } from "../types/index.js";
 import { fileSystem } from "../utils/file-system.js";
 import { logSuccess, logError, logWarning } from "../utils/logger.js";
+import { Context7Service } from "./mcp/context7.js";
 import { PlaywrightService } from "./mcp/playwright.js";
 
 export class MCPSetupService {
   private playwrightService: PlaywrightService;
+  private context7Service: Context7Service;
 
   constructor() {
     this.playwrightService = new PlaywrightService();
+    this.context7Service = new Context7Service();
   }
 
-  setupIDE(ideKey: IDEKey, mcpServerKeys: MCPServerKey[]): void {
+  async setupIDE(ideKey: IDEKey, mcpServerKeys: MCPServerKey[]): Promise<void> {
     try {
       const ideConfig = IDE_CONFIGS[ideKey];
 
@@ -25,7 +28,7 @@ export class MCPSetupService {
       }
 
       this.ensureDirectoryExists(ideConfig.dirPath);
-      this.writeConfigurationFile(ideKey, mcpServerKeys);
+      await this.writeConfigurationFile(ideKey, mcpServerKeys);
     } catch (error) {
       logError(
         `Failed to configure ${ideKey}: ${
@@ -36,12 +39,15 @@ export class MCPSetupService {
     }
   }
 
-  setupMultipleIDEs(ideKeys: IDEKey[], mcpServerkeys: MCPServerKey[]): void {
+  async setupMultipleIDEs(
+    ideKeys: IDEKey[],
+    mcpServerkeys: MCPServerKey[]
+  ): Promise<void> {
     const results = { success: 0, failed: 0 };
 
     for (const ideKey of ideKeys) {
       try {
-        this.setupIDE(ideKey, mcpServerkeys);
+        await this.setupIDE(ideKey, mcpServerkeys);
         results.success++;
       } catch (error) {
         results.failed++;
@@ -58,12 +64,12 @@ export class MCPSetupService {
     }
   }
 
-  private writeConfigurationFile(
+  private async writeConfigurationFile(
     ideKey: IDEKey,
     MCPServerKeys: MCPServerKey[]
-  ): void {
+  ): Promise<void> {
     // Create the configuration object based on the IDE template
-    const configData = this.createConfigurationFromTemplate(
+    const configData = await this.createConfigurationFromTemplate(
       ideKey,
       MCPServerKeys
     );
@@ -75,10 +81,10 @@ export class MCPSetupService {
     fileSystem.writeJSON(IDE_CONFIGS[ideKey].filePath, configData);
   }
 
-  private createConfigurationFromTemplate(
+  private async createConfigurationFromTemplate(
     ideKey: IDEKey,
     MCPServerKeys: MCPServerKey[]
-  ): any {
+  ): Promise<any> {
     if (!IDE_CONFIGS[ideKey]) {
       throw new Error(`Unknown IDE: ${ideKey}`);
     }
@@ -93,8 +99,8 @@ export class MCPSetupService {
     configData[serversKey] = {};
 
     for (const mcpServerKey of MCPServerKeys) {
-      const configJson = this.getJSONConfig(ideKey, mcpServerKey);
-      configData[serversKey] = configJson;
+      const configJson = await this.getJSONConfig(ideKey, mcpServerKey);
+      Object.assign(configData[serversKey], configJson);
     }
     return configData;
   }
@@ -105,12 +111,15 @@ export class MCPSetupService {
     throw new Error("Unknown template format - no servers key found");
   }
 
-  private getJSONConfig(ideKey: IDEKey, mcpServerKey: MCPServerKey): any {
+  private async getJSONConfig(
+    ideKey: IDEKey,
+    mcpServerKey: MCPServerKey
+  ): Promise<any> {
     switch (mcpServerKey) {
       case MCPServerKeyEnum.PLAYWRIGHT:
         return this.playwrightService.getPlaywrightConfig(ideKey);
-      // case MCPServerKeyEnum.CONTEXT7_MCP:
-      //   return this.context7Service.getContext7Config(ideKey);
+      case MCPServerKeyEnum.CONTEXT7_MCP:
+        return await this.context7Service.getContext7Config(ideKey);
       // case MCPServerKeyEnum.FIRECRAWL_MCP:
       //   return this.firecrawlService.getFirecrawlConfig(ideKey);
       default:

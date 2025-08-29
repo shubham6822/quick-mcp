@@ -48,7 +48,7 @@ export class MCPSetupApp {
     selectedIDEs: IDEKey[],
     mcpConfigurations: MCPServerKey[]
   ): Promise<void> {
-    this.setupService.setupMultipleIDEs(selectedIDEs, mcpConfigurations);
+    await this.setupService.setupMultipleIDEs(selectedIDEs, mcpConfigurations);
 
     console.log("\n🎉 Setup completed! Your IDEs are now configured for MCP.");
   }
