@@ -1,7 +1,8 @@
-import { PromptService } from "./services/prompt-service.js";
-import { MCPSetupService } from "./services/mcp-setup-service.js";
+import { PromptService } from "./services/promptService.js";
+import { MCPSetupService } from "./services/setupService.js";
 import { displayBanner, logInfo, logError } from "./utils/logger.js";
-import type { IDEKey, MCPConfiguration } from "./types/index.js";
+import type { IDEKey, MCPConfiguration, MCPServerKey } from "./types/index.js";
+import { PlaywrightService } from "./services/mcp/playwright.js";
 
 export class MCPSetupApp {
   private promptService: PromptService;
@@ -25,14 +26,14 @@ export class MCPSetupApp {
       }
 
       // Step 2: Select MCP servers
-      const mcpConfigurations = await this.promptService.promptForMCPServers();
+      const selectedMCPServers = await this.promptService.promptForMCPServers();
 
-      if (mcpConfigurations.length === 0) {
+      if (selectedMCPServers.length === 0) {
         logInfo("No MCP servers selected. Exiting...");
         return;
       }
 
-      await this.confirmAndSetup(selectedIDEs, mcpConfigurations);
+      await this.confirmAndSetup(selectedIDEs, selectedMCPServers);
     } catch (error) {
       logError(
         `Application error: ${
@@ -45,24 +46,8 @@ export class MCPSetupApp {
 
   private async confirmAndSetup(
     selectedIDEs: IDEKey[],
-    mcpConfigurations: MCPConfiguration[]
+    mcpConfigurations: MCPServerKey[]
   ): Promise<void> {
-    const summary = this.setupService.getConfigurationSummary(
-      selectedIDEs,
-      mcpConfigurations
-    );
-    console.log("\n" + summary + "\n");
-
-    // Confirm before proceeding
-    const shouldProceed = await this.promptService.confirmAction(
-      "Do you want to proceed with the configuration?"
-    );
-
-    if (!shouldProceed) {
-      logInfo("Configuration cancelled by user.");
-      return;
-    }
-
     this.setupService.setupMultipleIDEs(selectedIDEs, mcpConfigurations);
 
     console.log("\n🎉 Setup completed! Your IDEs are now configured for MCP.");

@@ -1,7 +1,7 @@
-import type { IDEConfig } from "../types/index.js";
+import { IDEKeyEnum, type IDEConfig } from "../types/index.js";
 
 const IDE_CONFIGS: Record<string, IDEConfig> = {
-  claude: {
+  [IDEKeyEnum.CLAUDE]: {
     name: "Claude Code",
     dirPath: "",
     filePath: ".mcp.json",
@@ -17,7 +17,7 @@ const IDE_CONFIGS: Record<string, IDEConfig> = {
       },
     },
   },
-  cursor: {
+  [IDEKeyEnum.CURSOR]: {
     name: "Cursor",
     dirPath: ".cursor",
     filePath: ".cursor/mcp.json",
@@ -34,7 +34,7 @@ const IDE_CONFIGS: Record<string, IDEConfig> = {
       },
     },
   },
-  copilot: {
+  [IDEKeyEnum.COPILOT]: {
     name: "GitHub Copilot",
     dirPath: ".vscode",
     filePath: ".vscode/mcp.json",
