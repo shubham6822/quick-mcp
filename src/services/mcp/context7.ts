@@ -10,7 +10,7 @@ import {
 export class Context7Service {
   private mcpConfig: MCPServer;
   private apiKey = "";
-  private apiKeyPrompted = false; // Track if we've already prompted for the API key
+  private apiKeyPrompted = false;
 
   constructor() {
     this.mcpConfig = MCP_SERVERS[MCPServerKeyEnum.CONTEXT7_MCP];
@@ -45,7 +45,6 @@ export class Context7Service {
   }
 
   private getClaudeConfig(ideKey: IDEKey): any {
-    // Replace YOUR_API_KEY placeholder with actual API key
     const args = this.mcpConfig.args.map((arg) =>
       arg === "YOUR_API_KEY" ? this.apiKey : arg
     );
@@ -59,7 +58,6 @@ export class Context7Service {
   }
 
   private getCursorConfig(ideKey: IDEKey): any {
-    // Replace YOUR_API_KEY placeholder with actual API key
     const args = this.mcpConfig.args.map((arg) =>
       arg === "YOUR_API_KEY" ? this.apiKey : arg
     );
@@ -73,7 +71,6 @@ export class Context7Service {
   }
 
   private getCopilotConfig(ideKey: IDEKey): any {
-    // Replace YOUR_API_KEY placeholder with actual API key
     const args = this.mcpConfig.args.map((arg) =>
       arg === "YOUR_API_KEY" ? this.apiKey : arg
     );
@@ -90,7 +87,7 @@ export class Context7Service {
     const envAnswer = await inquirer.prompt({
       type: "input",
       name: "apiKey",
-      message: `Enter value for ${this.mcpConfig.name}:`,
+      message: `Enter value for ${this.mcpConfig.name} (Get your API key at: ${this.mcpConfig.link}):`,
       validate: (input: string) => {
         if (!input.trim()) {
           return `${this.mcpConfig.name} is required for ${this.mcpConfig.name}`;

@@ -34,12 +34,6 @@ A CLI tool to quickly set up Model Context Protocol (MCP) servers for various ID
 ## Installation
 
 ```bash
-npm install -g setup-mcp
-```
-
-Or run directly with npx:
-
-```bash
 npx setup-mcp
 ```
 
