@@ -2,6 +2,7 @@ import inquirer from "inquirer";
 import MCP_SERVERS from "../../config/mcpConfigs.js";
 import {
   IDEKeyEnum,
+  logInfo,
   MCPServerKeyEnum,
   type IDEKey,
   type MCPServer,
@@ -84,10 +85,11 @@ export class Context7Service {
   }
 
   private async promptForAPIKey(ideKey: IDEKey): Promise<string> {
+    logInfo(`Get your API key at: ${this.mcpConfig.link}`);
     const envAnswer = await inquirer.prompt({
       type: "input",
       name: "apiKey",
-      message: `Enter value for ${this.mcpConfig.name} (Get your API key at: ${this.mcpConfig.link}):`,
+      message: `Enter value for ${this.mcpConfig.name} :`,
       validate: (input: string) => {
         if (!input.trim()) {
           return `${this.mcpConfig.name} is required for ${this.mcpConfig.name}`;

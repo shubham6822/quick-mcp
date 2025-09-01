@@ -1,7 +1,10 @@
 import inquirer from "inquirer";
+import searchCheckbox from "inquirer-search-checkbox";
 import IDE_CONFIGS from "../config/ideConfigs.js";
 import MCP_SERVERS from "../config/mcpConfigs.js";
 import type { IDEKey, MCPServerKey, MCPConfiguration } from "../types/index.js";
+
+inquirer.registerPrompt("search-checkbox", searchCheckbox);
 
 export class PromptService {
   async promptForIDEs(): Promise<IDEKey[]> {
@@ -33,15 +36,14 @@ export class PromptService {
 
   async promptForMCPServers(): Promise<MCPServerKey[]> {
     try {
-      // First, let user select MCP servers
+      // First, let user select MCP servers with search functionality
       const serverAnswers = await inquirer.prompt({
-        type: "checkbox",
+        type: "search-checkbox" as any,
         name: "selectedServers",
-        message: "Select the MCP servers you want to configure:",
+        message: "Search and select MCP servers (type to filter, space to select, enter to confirm):",
         choices: Object.entries(MCP_SERVERS).map(([key, server]) => ({
           name: `${server.name} (${key})`,
           value: key as MCPServerKey,
-          checked: false,
         })),
         validate: (answer: unknown) => {
           const selected = answer as MCPServerKey[];

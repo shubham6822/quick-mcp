@@ -30,5 +30,5 @@ export function logWarning(message: string): void {
 }
 
 export function logInfo(message: string): void {
-  console.log(chalk.blue(`ℹ️ ${message}`));
+  console.log(chalk.blue(`${message}`));
 }
