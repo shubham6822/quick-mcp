@@ -8,15 +8,18 @@ import {
 import { fileSystem } from "../utils/file-system.js";
 import { logSuccess, logError, logWarning } from "../utils/logger.js";
 import { Context7Service } from "./mcp/context7.js";
+import { FirecrawlService } from "./mcp/firecrawl.js";
 import { PlaywrightService } from "./mcp/playwright.js";
 
 export class MCPSetupService {
   private playwrightService: PlaywrightService;
   private context7Service: Context7Service;
+  private firecrawlService: FirecrawlService;
 
   constructor() {
     this.playwrightService = new PlaywrightService();
     this.context7Service = new Context7Service();
+    this.firecrawlService = new FirecrawlService();
   }
 
   async setupIDE(ideKey: IDEKey, mcpServerKeys: MCPServerKey[]): Promise<void> {
@@ -120,8 +123,8 @@ export class MCPSetupService {
         return this.playwrightService.getPlaywrightConfig(ideKey);
       case MCPServerKeyEnum.CONTEXT7_MCP:
         return await this.context7Service.getContext7Config(ideKey);
-      // case MCPServerKeyEnum.FIRECRAWL_MCP:
-      //   return this.firecrawlService.getFirecrawlConfig(ideKey);
+      case MCPServerKeyEnum.FIRECRAWL_MCP:
+        return await this.firecrawlService.getFirecrawlConfig(ideKey);
       default:
         throw new Error(`Unknown MCP Server: ${mcpServerKey}`);
     }
