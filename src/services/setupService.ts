@@ -10,16 +10,19 @@ import { logSuccess, logError, logWarning } from "../utils/logger.js";
 import { Context7Service } from "./mcp/context7.js";
 import { FirecrawlService } from "./mcp/firecrawl.js";
 import { PlaywrightService } from "./mcp/playwright.js";
+import { SerenaService } from "./mcp/serena.js";
 
 export class MCPSetupService {
   private playwrightService: PlaywrightService;
   private context7Service: Context7Service;
   private firecrawlService: FirecrawlService;
+  private serenaService: SerenaService;
 
   constructor() {
     this.playwrightService = new PlaywrightService();
     this.context7Service = new Context7Service();
     this.firecrawlService = new FirecrawlService();
+    this.serenaService = new SerenaService();
   }
 
   async setupIDE(ideKey: IDEKey, mcpServerKeys: MCPServerKey[]): Promise<void> {
@@ -125,6 +128,8 @@ export class MCPSetupService {
         return await this.context7Service.getContext7Config(ideKey);
       case MCPServerKeyEnum.FIRECRAWL_MCP:
         return await this.firecrawlService.getFirecrawlConfig(ideKey);
+      case MCPServerKeyEnum.SERENA_MCP:
+        return await this.serenaService.getSerenaConfig(ideKey);
       default:
         throw new Error(`Unknown MCP Server: ${mcpServerKey}`);
     }

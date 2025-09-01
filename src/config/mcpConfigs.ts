@@ -24,6 +24,13 @@ const MCP_SERVERS: Record<MCPServerKeyEnum, MCPServer> = {
     args: ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"],
     link: "https://context7.com/",
   },
+  [MCPServerKeyEnum.SERENA_MCP]: {
+    name: "Serena",
+    command: "uvx",
+    apiKey: false,
+    args: ["--from", "git+https://github.com/oraios/serena", "serena", "start-mcp-server"],
+    link: "https://github.com/oraios/serena",
+  },
 } as const;
 
 export default MCP_SERVERS;
