@@ -24,12 +24,11 @@ A CLI tool to quickly set up Model Context Protocol (MCP) servers for various ID
 
 - **Playwright Browser Automation** - Web automation and testing
 - **Firecrawl Web Scraping** - Web scraping with API key
-- **File System Operations** - Local file system access (custom path required)
-- **PostgreSQL Database** - Database operations (connection string required)
-- **SQLite Database** - SQLite database access (database path required)
-- **HTTP Fetch Operations** - HTTP requests and API calls
-- **GitHub Integration** - GitHub API access (token required)
-- **Brave Search** - Search functionality (API key required)
+- **shadcn MCP** - Browse/search/install UI components via the shadcn MCP server
+- **BrowserMCP** - Example third-party MCP server for browser-related features
+- **21st Magic** - Magic MCP server that requires an API key (example)
+- **Serena** - capable of turning an LLM into a fully-featured agent that works directly on your codebase.
+- **Context 7** - a versatile MCP server for various context-aware tasks.
 
 ## Installation
 

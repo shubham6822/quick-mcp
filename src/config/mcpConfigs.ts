@@ -24,6 +24,27 @@ const MCP_SERVERS: Record<MCPServerKeyEnum, MCPServer> = {
     args: ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"],
     link: "https://context7.com/",
   },
+  [MCPServerKeyEnum.SHADCN_MCP]: {
+    name: "ShadCN",
+    command: "npx",
+    apiKey: false,
+    args: ["shadcn@latest", "mcp"],
+    link: "https://ui.shadcn.com/",
+  },
+  [MCPServerKeyEnum.BROWSER_MCP]: {
+    name: "BrowserMCP",
+    command: "npx",
+    apiKey: false,
+    args: ["@browsermcp/mcp@latest"],
+    link: "https://github.com/browsermcp",
+  },
+  [MCPServerKeyEnum.MAGIC_MCP]: {
+    name: "21st Magic",
+    command: "npx",
+    apiKey: true,
+    args: ["-y", "@21st-dev/magic@latest", "API_KEY=\"your-api-key\""],
+    link: "https://github.com/21st-dev/magic",
+  },
   [MCPServerKeyEnum.SERENA_MCP]: {
     name: "Serena",
     command: "uvx",

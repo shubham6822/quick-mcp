@@ -20,7 +20,14 @@ export interface MCPEntry {
 }
 
 export type IDEKey = "claude" | "cursor" | "copilot";
-export type MCPServerKey = "playwright" | "firecrawl-mcp" | "context7-mcp" | "serena-mcp";
+export type MCPServerKey =
+  | "playwright"
+  | "firecrawl-mcp"
+  | "context7-mcp"
+  | "shadcn-mcp"
+  | "browsermcp"
+  | "magic-mcp"
+  | "serena-mcp";
 
 export enum IDEKeyEnum {
   CLAUDE = "claude",
@@ -32,6 +39,9 @@ export enum MCPServerKeyEnum {
   PLAYWRIGHT = "playwright",
   FIRECRAWL_MCP = "firecrawl-mcp",
   CONTEXT7_MCP = "context7-mcp",
+  SHADCN_MCP = "shadcn-mcp",
+  BROWSER_MCP = "browsermcp",
+  MAGIC_MCP = "magic-mcp",
   SERENA_MCP = "serena-mcp",
 }
 

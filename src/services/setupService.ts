@@ -11,18 +11,27 @@ import { Context7Service } from "./mcp/context7.js";
 import { FirecrawlService } from "./mcp/firecrawl.js";
 import { PlaywrightService } from "./mcp/playwright.js";
 import { SerenaService } from "./mcp/serena.js";
+import { ShadcnService } from "./mcp/shadcn.js";
+import { BrowserMCPService } from "./mcp/browsermcp.js";
+import { MagicService } from "./mcp/magic.js";
 
 export class MCPSetupService {
   private playwrightService: PlaywrightService;
   private context7Service: Context7Service;
   private firecrawlService: FirecrawlService;
   private serenaService: SerenaService;
+  private shadcnService: ShadcnService;
+  private browserMCPService: BrowserMCPService;
+  private magicService: MagicService;
 
   constructor() {
     this.playwrightService = new PlaywrightService();
     this.context7Service = new Context7Service();
     this.firecrawlService = new FirecrawlService();
     this.serenaService = new SerenaService();
+    this.shadcnService = new ShadcnService();
+    this.browserMCPService = new BrowserMCPService();
+    this.magicService = new MagicService();
   }
 
   async setupIDE(ideKey: IDEKey, mcpServerKeys: MCPServerKey[]): Promise<void> {
@@ -37,8 +46,7 @@ export class MCPSetupService {
       await this.writeConfigurationFile(ideKey, mcpServerKeys);
     } catch (error) {
       logError(
-        `Failed to configure ${ideKey}: ${
-          error instanceof Error ? error.message : "Unknown error"
+        `Failed to configure ${ideKey}: ${error instanceof Error ? error.message : "Unknown error"
         }`
       );
       throw error;
@@ -126,6 +134,12 @@ export class MCPSetupService {
         return this.playwrightService.getPlaywrightConfig(ideKey);
       case MCPServerKeyEnum.CONTEXT7_MCP:
         return await this.context7Service.getContext7Config(ideKey);
+      case MCPServerKeyEnum.SHADCN_MCP:
+        return this.shadcnService.getShadcnConfig(ideKey);
+      case MCPServerKeyEnum.BROWSER_MCP:
+        return this.browserMCPService.getBrowserMCPConfig(ideKey);
+      case MCPServerKeyEnum.MAGIC_MCP:
+        return await this.magicService.getMagicConfig(ideKey);
       case MCPServerKeyEnum.FIRECRAWL_MCP:
         return await this.firecrawlService.getFirecrawlConfig(ideKey);
       case MCPServerKeyEnum.SERENA_MCP:

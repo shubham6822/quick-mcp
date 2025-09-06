@@ -89,7 +89,7 @@ export class Context7Service {
     const envAnswer = await inquirer.prompt({
       type: "input",
       name: "apiKey",
-      message: `Enter value for ${this.mcpConfig.name} :`,
+      message: `Enter API key for ${this.mcpConfig.name} :`,
       validate: (input: string) => {
         if (!input.trim()) {
           return `${this.mcpConfig.name} is required for ${this.mcpConfig.name}`;
